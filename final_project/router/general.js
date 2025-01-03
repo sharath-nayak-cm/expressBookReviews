@@ -3,6 +3,16 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+// Import Axios
+const axios = require("axios");
+
+// Set the base URL for the API
+const apiBaseUrl = "http://localhost:3000";
+
+// Create an Axios instance with the base URL and authentication token
+const api = axios.create({
+  baseURL: apiBaseUrl,
+});
 
 function findBooksByAuthor(author) {
   for (let bookId in books) {
@@ -110,3 +120,43 @@ public_users.get("/review/:isbn", function (req, res) {
 });
 
 module.exports.general = public_users;
+
+// Call the GET /books API
+async function getBooks() {
+  try {
+    const response = await api.get("/");
+    console.log(response.data.message);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getBooksByISBN(isbn) {
+  let isbn = isbn;
+  try {
+    const response = await api.get(`/isbn/${isbn}`);
+    console.log(response.data.message);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getBooksByAuthor(author) {
+  let author = author;
+  try {
+    const response = await api.get(`/author/${author}`);
+    console.log(response.data.message);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getBooksByTitle(title) {
+  let title = title;
+  try {
+    const response = await api.get(`/title/${title}`);
+    console.log(response.data.message);
+  } catch (error) {
+    console.error(error);
+  }
+}
